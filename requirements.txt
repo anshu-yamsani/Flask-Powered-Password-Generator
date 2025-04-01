@@ -1,0 +1,1013 @@
+blinker==1.7.0
+click==8.1.7
+colorama==0.4.6
+Flask==3.0.0
+itsdangerous==2.1.2
+Jinja2==3.1.2
+MarkupSafe==2.1.3
+Werkzeug==3.0.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+week 10:
+ [
+  {
+    "id": 1,
+    "name": "shamitha",
+    "age": 20,
+    "cgpa": 9.25
+  },
+  {
+    "id": 2,
+    "name": "sashank",
+    "age": 22,
+    "cgpa": 9.5
+  },
+  {
+    "id": 3,
+    "name": "khyathi",
+    "age": 24,
+    "cgpa": 9.45
+  },
+  {
+    "id": 4,
+    "name": "chakri",
+    "age": 22,
+    "cgpa": 8.5
+  }
+]
+student.json
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const cors = require('cors');
+
+const app = express();
+const port = 3000;
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+
+// File path for student data
+const dataFilePath = './student.json';
+
+// Function to read data from JSON file
+const readData = () => {
+    const data = fs.readFileSync(dataFilePath);
+    return JSON.parse(data);
+};
+
+// Function to write data to JSON file
+const writeData = (data) => {
+    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+};
+
+// Create a new student
+// Create a new student
+// Create a new student
+app.post('/students', (req, res) => {
+    const students = readData();
+    
+    // Ensure the request body contains the expected properties
+    const { name, age, cgpa } = req.body;
+
+    // Check if all required properties are provided
+    if (!name || !age || !cgpa) {
+        return res.status(400).json({ message: 'Please provide name, age, and grade.' });
+    }
+
+    // Construct new student object
+    const newStudent = { id: students.length + 1, name, age, cgpa };
+    
+    students.push(newStudent);
+    writeData(students);
+    res.status(201).json(newStudent);
+});
+
+
+
+// Get all students
+app.get('/students', (req, res) => {
+    const students = readData();
+    res.json(students);
+});
+
+// Get a student by ID
+app.get('/students/:id', (req, res) => {
+    const students = readData();
+    const student = students.find(s => s.id === parseInt(req.params.id));
+    if (student) {
+        res.json(student);
+    } else {
+        res.status(404).json({ message: 'Student not found' });
+    }
+});
+
+// Update a student by ID
+app.put('/students/:id', (req, res) => {
+    const id = req.params.id;
+    const updatedData = req.body;
+
+    // Read existing data from JSON file
+    fs.readFile('student.json', 'utf8', (err, data) => {
+        if (err) return res.status(500).send("Error reading data");
+
+        const students = JSON.parse(data);
+        const studentIndex = students.findIndex(student => student.id == id);
+
+        if (studentIndex === -1) return res.status(404).send("Student not found");
+
+        // Update student data
+        students[studentIndex] = { ...students[studentIndex], ...updatedData };
+
+        // Write updated data back to file
+        fs.writeFile('student.json', JSON.stringify(students, null, 2), (err) => {
+            if (err) return res.status(500).send("Error updating data");
+            res.status(200).json(students[studentIndex]);
+        });
+    });
+});
+
+// Delete a student by ID
+app.delete('/students/:id', (req, res) => {
+    let students = readData();
+    const studentIndex = students.findIndex(s => s.id === parseInt(req.params.id));
+    if (studentIndex !== -1) {
+        const deletedStudent = students.splice(studentIndex, 1);
+        writeData(students);
+        res.json({ message: 'Student deleted', student: deletedStudent });
+    } else {
+        res.status(404).json({ message: 'Student not found' });
+    }
+});
+
+app.listen(port, () => {
+    console.log(Server is running on http://localhost:${port});
+});
+ app.js
+ npm i express  body-parser cors nodemon
+ npm init -y
+ {
+    "name": "chandhana",
+    "age": 21,
+    "cgpa":10
+}
+---------
+week 9:
+os:
+const os = require('os'); 
+console.log('OS Platform:', os.platform()); 
+console.log('OS Architecture:', os.arch()); 
+console.log('Total Memory (in bytes):', os.totalmem()); 
+console.log('Free Memory (in bytes):', os.freemem());
+path:
+const path = require('path'); 
+const filePath = '/path/to/some/file.txt'; 
+console.log('File Name:', path.basename(filePath)); 
+console.log('Directory Name:', path.dirname(filePath)); 
+console.log('File Extension:', path.extname(filePath));
+event:
+const EventEmitter = require('events'); 
+class MyEmitter extends EventEmitter {} 
+const myEmitter = new MyEmitter();
+server:
+const http = require('http'); 
+const server = http.createServer((req, res) => { 
+res.writeHead(200, {'Content-Type': 'text/plain' 
+}); 
+res.end('Hello, this is a custom server!');}); 
+const PORT = 3000;server.listen(PORT, () => { 
+console.log(Server is listening on port ${PORT});});
+----
+week 8:
+count:
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Website Visit Counter</title>
+</head>
+<body>
+    <h1>Welcome to My Website!</h1>
+    <p>You have visited this page <span id="visit-count">0</span> times.</p>
+    <script>
+        let visitCount = localStorage.getItem('page_visit_count');
+        if (!visitCount) 
+    {
+            visitCount = 0;
+        }
+        visitCount++;
+        localStorage.setItem('page_visit_count', visitCount);
+        document.getElementById('visit-count').textContent = visitCount;
+    </script>
+</body>
+</html>
+index:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie-Based Language Preference</title>
+</head>
+<body>
+    <h1>Welcome to the website!</h1>
+    {% if user_language %}
+        <p>Your preferred language is: {{ user_language }}</p>
+    {% else %}
+        <p>Your language preference is not set.</p>
+    {% endif %}
+    <h2>Set Your Language Preference:</h2>
+    <p><a href="/set_language/en">Set language to English</a></p>
+    <p><a href="/set_language/es">Set language to Spanish</a></p>
+</body>
+</html>
+python:
+from flask import Flask, request, render_template, make_response
+app = Flask(__name__)
+@app.route('/')
+def index():
+    # Check if the language cookie is set
+    user_language = request.cookies.get('user_language')
+    return render_template('index.html', user_language=user_language)
+
+@app.route('/set_language/<language>')
+def set_language(language):
+    # Set the language preference in a cookie
+    response = make_response(render_template('index.html', user_language=language))
+    response.set_cookie('user_language', language)
+    return response
+
+if __name__ == '__main__':
+    app.run(debug=True)
+------
+week 6:
+bookstore.dtd:
+<?xml version="1.0" encoding="UTF-8"?>
+ <!ELEMENT bookstore (book+)>
+ <!ELEMENT book (title, author, price)>
+ <!ELEMENT title (#PCDATA)>
+ <!ELEMENT author (#PCDATA)>
+ <!ELEMENT price (#PCDATA)>
+bookstore.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE bookstore SYSTEM "bookstore.dtd">
+ <bookstore>
+    <book>
+        <title>Introduction to XML</title>
+        <author>John Doe</author>
+        <price>29.99</price>
+    </book>
+    <book>
+        <title>Web Development Basics</title>
+        <author>Jane Smith</author>
+        <price>39.95</price>
+    </book>
+    <!-- Add more book entries as needed -->
+ </bookstore>
+bookstore.xsd:
+<?xml version="1.0" encoding="UTF-8"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="bookstore" type="bookstoreType"/>
+    <xs:complexType name="bookstoreType">
+        <xs:sequence>
+            <xs:element name="book" type="bookType" minOccurs="0" 
+maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="bookType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="author" type="xs:string"/>
+            <xs:element name="price" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+ </xs:schema>
+------
+week 5:
+package student;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+public class insert {
+	private static final String Insert_Query="INSERT INTO STUDENT(STUDENTID,SNAME,SADRESS) VALUES(?,?,?)";
+	public static void main(String[] args) {
+		Scanner scn=new Scanner(System.in);
+		//load the jdbc driver
+		try {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		//create the connection
+		try(Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/week5","root","mysql")){
+		PreparedStatement ps=con.prepareStatement(Insert_Query);{
+			System.out.println("enter studentid:");
+			int studentid=scn.nextInt();
+			System.out.println("Enter sname");
+			String sname=scn.next();
+			System.out.println("Enter sadress");
+			String sadress=scn.next();
+			
+			
+			//set the values
+			ps.setInt(1, studentid);
+			ps.setString(2, sname);
+			ps.setString(3, sadress);
+			//execute query
+			int count=ps.executeUpdate();
+			if(count==0) {
+				System.out.println("Record is not registered");
+			}else {
+				System.out.println("record is registered");
+			}
+		}
+		}catch(SQLException se) {
+			System.out.println(se.getMessage());
+			se.printStackTrace();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			
+	
+			
+		}
+
+	}
+
+}
+-------
+week 4:
+script:
+document.addEventListener('DOMContentLoaded', () => {
+    const apiKey = 'b0e2627be270f36dc46cbdd395428825'; // Your API key
+    const city = 'Hyderabad'; // Your city name
+    const apiUrl = https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric;
+
+    // Fetch weather data using async/await
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(apiUrl);
+            const weatherData = response.data;
+            updateGraph(weatherData.main.temp); // Pass temperature data to update the graph
+        } catch (error) {
+            console.error('Error fetching weather data:', error.message);
+        }
+    };
+
+    // Update graph with temperature data
+    const updateGraph = (temperature) => {
+        const ctx = document.getElementById('weatherGraph').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Temperature'],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [temperature],
+                    backgroundColor: ['#36A2EB'],
+                }],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+    };
+
+    fetchData(); // Fetch data when the page loads
+});
+style:
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+canvas {
+    display: block;
+    margin: 20px auto;
+}
+index:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Weather Graph</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Graph</h1>
+        <canvas id="weatherGraph" width="400" height="200"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+--------
+week 3:
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to NNRG e-Book's website</title>
+    <script>
+        function validate() {
+            var uname = f1.username.value;
+            if (uname.length < 8) { alert("Username must be at least 8 characters"); f1.username.focus(); return false; }
+
+            var pwd = f1.password.value;
+            if (pwd.length < 6) { alert("Password must be at least 6 characters"); f1.password.focus(); return false; }
+
+            var email = f1.email.value;
+            if (!email.includes("@")) { alert("Invalid Email ID"); f1.email.focus(); return false; }
+
+            var phno = f1.phno.value;
+            if (phno.length != 10 || isNaN(phno)) { alert("Enter a valid 10-digit phone number"); f1.phno.focus(); return false; }
+
+            var gender = Array.from(f1.gen).some(r => r.checked);
+            if (!gender) { alert("Please choose a gender"); return false; }
+
+            var language = Array.from(f1.lang).some(c => c.checked);
+            if (!language) { alert("Please select at least one language"); return false; }
+
+            var addr = f1.address.value;
+            if (!addr) { alert("Please enter your address"); f1.address.focus(); return false; }
+
+            alert("Registration Successful");
+        }
+    </script>
+</head>
+<body>
+    <center>
+        <h3>Registration Form</h3>
+        <form name="f1">
+            <table cellpadding="1">
+                <tr><td>User Name:*</td><td><input type="text" name="username"></td></tr>
+                <tr><td>Password:*</td><td><input type="password" name="password"></td></tr>
+                <tr><td>Email ID:*</td><td><input type="text" name="email"></td></tr>
+                <tr><td>Phone Number:*</td><td><input type="text" name="phno"></td></tr>
+                <tr><td>Gender:*</td><td><input type="radio" name="gen" value="Male">Male <input type="radio" name="gen" value="Female">Female</td></tr>
+                <tr><td>Languages Known:*</td>
+                    <td><input type="checkbox" name="lang" value="English">English<br>
+                        <input type="checkbox" name="lang" value="Telugu">Telugu<br>
+                        <input type="checkbox" name="lang" value="Hindi">Hindi<br>
+                        <input type="checkbox" name="lang" value="Tamil">Tamil</td></tr>
+                <tr><td>Address:*</td><td><textarea name="address"></textarea></td></tr>
+                <tr><td></td><td><input type="button" value="SUBMIT" onclick="validate()"> <input type="reset" value="RESET"></td></tr>
+                <tr><td colspan="2">*<font color="#FF0000">fields are mandatory</font></td></tr>
+            </table>
+        </form>
+    </center>
+</body>
+</html>
+------------
+week 2:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>Home - FBS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      
+      <h1>FBS - World Best Online Ebooks Website</h1>
+    </header>
+
+    <nav>
+      <ul class="d-flex justify-content-around" style="gap:500px">
+        <li><a href="week1.html">Home</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="registration.html">Registration</a></li>
+        <li><a href="cart.html">Cart</a></li>
+      </ul>
+    </nav>
+
+   <main>
+      <h2>Welcome to FBS e-Book's Website</h2>
+      <p>Shop with us and save up to 90% this discount season!</p>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 All rights reserved by FBS ebooks</p>
+    </footer>
+  </div>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> 
+</body>
+</html>
+----------
+week 1:
+cart:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cart - FBS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header><h1>Your Cart</h1></header>
+    <p>No items in your cart yet.</p>
+    <a href="index.html">Continue Shopping</a>
+</body>
+</html> 
+
+login:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login - FBS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header><h1>Login to FBS</h1></header>
+    <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
+
+reg:
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register - FBS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header><h1>Register for FBS</h1></header>
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
+
+index:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>FBS - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="fbs.png" alt="FBS Logo" width="130">
+        <h1>Welcome to FBS - Best Online eBooks</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="registration.html">Register</a>
+        <a href="cart.html">Cart</a>
+    </nav>
+    <main>
+        <h2>Explore our Collection</h2>
+        <p>Your gateway to a world of eBooks.</p>
+    </main>
+</body>
+</html>
+
+script:
+document.addEventListener('DOMContentLoaded', () => {
+    // Registration form validation
+    const regForm = document.getElementById('registrationForm');
+    if (regForm) {
+        regForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (!username || !email || !password) {
+                alert('All fields are required.');
+            } else if (password.length < 6) {
+                alert('Password must be at least 6 characters.');
+            } else {
+                alert('Registration successful!');
+            }
+        });
+    }
+
+    // Login form validation
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (!username || !password) {
+                alert('Both fields are required.');
+            } else {
+                alert('Login successful!');
+            }
+        });
+    }
+
+    // Cart interactions
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            alert(button.dataset.item + ' added to cart!');
+        });
+    });
+
+    console.log('JavaScript loaded and ready!');
+});
+
+style:
+/* /* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+}
+
+/* Header */
+header {
+    background: #4CAF50;
+    color: #fff;
+    padding: 10px 15px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* Navigation Bar */
+nav {
+    background: #333;
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 5px 10px;
+    transition: background 0.3s;
+}
+
+nav a:hover {
+    background: #555;
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+}
+
+/* Form Styles */
+form {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 5px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+/* Utility Classes */
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Cart Message */
+p {
+    text-align: center;
+    margin-top: 20px;
+}
